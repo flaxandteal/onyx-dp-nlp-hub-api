@@ -1,7 +1,6 @@
 # dp-nlp-hub
 A simple proxy hub
 
-# dp-nlp-hub
 ## Description
 
 A Go application microservice to consolidate enhanced search functionality. 
@@ -28,7 +27,7 @@ In particular, this will call out to the dedicated thin wrappers for ML models w
 | HEALTHCHECK_INTERVAL         | 30s       | Time between self-healthchecks (`time.Duration` format)
 | HEALTHCHECK_CRITICAL_TIMEOUT | 90s       | Time to wait until an unhealthy dependent propagates its state to make this app unhealthy (`time.Duration` format)
 |	BERLIN_BASE           | http://localhost:3001/berlin/search |The url where the berlin api is available
-|	SCRUBBER_BASE               | http://localhost:3002/scrubber/search | The url where the scrubber apiapi  is available
+|	SCRUBBER_BASE               | http://localhost:3002/scrubber/search | The url where the scrubber api  is available
 |	CATEGORY_BASE           | http://localhost:80/categories |The url where the scrubber api is available
 
 ## Quick setup

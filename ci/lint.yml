@@ -1,0 +1,15 @@
+---
+
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: golang
+    tag: 1.19.5
+
+inputs:
+  - name: dp-nlp-hub
+
+run:
+  path: dp-nlp-hub/ci/scripts/lint.sh

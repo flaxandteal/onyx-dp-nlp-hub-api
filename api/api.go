@@ -27,14 +27,14 @@ func Setup(ctx context.Context, r *mux.Router, cfg *config.Config) *API {
 	return api
 }
 
-func MakeRequest(ctx context.Context, url string, params interface{}, resp interface{}) error {
+func MakeRequest(ctx context.Context, url string, params interface{}, resp interface{}) {
 	cl := clients.New(url, params)
 
 	log.Info(ctx, fmt.Sprintf("Making a request to: %s with query: %s", url, params))
 
 	res, err := cl.DoRequest()
 	if err != nil {
-		return fmt.Errorf("building request has failed: %v", err.Error())
+		log.Error(ctx, fmt.Sprintf("building request for %s has failed", url), err)
 	}
 	defer res.Body.Close()
 
@@ -42,11 +42,10 @@ func MakeRequest(ctx context.Context, url string, params interface{}, resp inter
 
 	b, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return fmt.Errorf("issue parsing response body %v", err.Error())
+		log.Error(ctx, fmt.Sprintf("issue parsing response body for %s", url), err)
 	}
 
 	if err := json.Unmarshal(b, &resp); err != nil {
-		return fmt.Errorf("issue found unmarshaling resp to the given interface %v", err.Error())
+		log.Error(ctx, fmt.Sprintf("issue found unmarshaling resp to the given interface for %s", url), err)
 	}
-	return nil
 }

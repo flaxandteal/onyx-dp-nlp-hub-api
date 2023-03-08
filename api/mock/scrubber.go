@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	"github.com/ONSdigital/dp-nlp-hub/payloads"
+	"github.com/ONSdigital/dp-nlp-hub/models"
 )
 
 func CreateScrubberServer() *httptest.Server {
@@ -14,10 +14,10 @@ func CreateScrubberServer() *httptest.Server {
 		w.WriteHeader(http.StatusOK)
 
 		// Return a mocked scrubber response
-		response := payloads.ScrubberSearchSchemaJson{
+		response := models.ScrubberSearchSchemaJson{
 			Query: "mocked query",
-			Results: payloads.Results{
-				Areas: []payloads.AreaResp{
+			Results: models.Results{
+				Areas: []models.AreaResp{
 					{
 						Codes:      map[string]string{"TC1": "TC1"},
 						Name:       "TN1",
@@ -25,7 +25,7 @@ func CreateScrubberServer() *httptest.Server {
 						RegionCode: "TRC",
 					},
 				},
-				Industries: []payloads.IndustryResp{
+				Industries: []models.IndustryResp{
 					{
 						Code: "1111",
 						Name: "IT",

@@ -1,4 +1,4 @@
-package payloads
+package models
 
 type Hub struct {
 	Scrubber ScrubberSearchSchemaJson

@@ -1,14 +1,9 @@
-package payloads
+package models
 
 type BerlinSearchSchemaJson struct {
 	Query   SearchTermJson `json:"query"`
 	Results []SearchResult `json:"results"`
 	Time    string         `json:"time"`
-}
-
-type SearchResult struct {
-	Loc   LocJson `json:"loc"`
-	Score int     `json:"score"`
 }
 
 type SearchTermJson struct {
@@ -19,6 +14,11 @@ type SearchTermJson struct {
 	Raw             string      `json:"raw"`
 	StateFilter     interface{} `json:"state_filter,omitempty"`
 	StopWords       []string    `json:"stop_words"`
+}
+
+type SearchResult struct {
+	Loc   LocJson `json:"loc"`
+	Score int     `json:"score"`
 }
 
 type LocJson struct {

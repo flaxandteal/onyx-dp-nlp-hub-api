@@ -1,4 +1,4 @@
-package payloads
+package models
 
 type Category []struct {
 	Code  []string `json:"c"`

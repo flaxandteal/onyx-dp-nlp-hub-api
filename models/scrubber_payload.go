@@ -1,4 +1,15 @@
-package payloads
+package models
+
+type ScrubberSearchSchemaJson struct {
+	Query   string  `json:"query"`
+	Results Results `json:"results"`
+	Time    string  `json:"time"`
+}
+
+type Results struct {
+	Areas      []AreaResp     `json:"areas"`
+	Industries []IndustryResp `json:"industries"`
+}
 
 type AreaResp struct {
 	Codes      map[string]string `json:"codes"`
@@ -10,15 +21,4 @@ type AreaResp struct {
 type IndustryResp struct {
 	Code string `json:"code"`
 	Name string `json:"name"`
-}
-
-type Results struct {
-	Areas      []AreaResp     `json:"areas"`
-	Industries []IndustryResp `json:"industries"`
-}
-
-type ScrubberSearchSchemaJson struct {
-	Query   string  `json:"query"`
-	Results Results `json:"results"`
-	Time    string  `json:"time"`
 }

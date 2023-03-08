@@ -12,41 +12,51 @@ VERSION ?= $(shell git tag --points-at HEAD | grep ^v | head -n 1)
 
 LDFLAGS = -ldflags "-X main.BuildTime=$(BUILD_TIME) -X main.GitCommit=$(GIT_COMMIT) -X main.Version=$(VERSION)"
 
-.PHONY: all ## runs audit test and build commands
+.PHONY: all ## runs audit, test and build commands
 all: audit test build
 
-.PHONY: audit
+.PHONY: audit ## Audits and finds vulnerable dependencies
 audit:
 	go list -json -m all | nancy sleuth
 
-.PHONY: lint
-lint:
-	exit
-
-.PHONY: run_docker_container 
-run_docker_container: ## Runs container name: from image name: nlp_hub
-	docker run -p 5000:5000 --name hub -ti --rm nlp_hub
-
-.PHONY: build_docker 
-build_docker: Dockerfile ## Builds ./Dockerfile image name: nlp_hub
+.PHONY: build
+build:Dockerfile ## Builds ./Dockerfile image name: nlp_hub
 	docker build -t nlp_hub .
 
-.PHONY: build
-build: ## builds bin
+.PHONY: build_locally 
+build_locally: ## builds bin
 	go build -tags 'production' $(LDFLAGS) -o $(BINPATH)/dp-nlp-hub
+
+.PHONY: convey
+convey: ## Runs only convey tests
+	goconvey ./...
 
 .PHONY: debug
 debug: ## Runs application locally with debug mode on
 	go build -tags 'debug' $(LDFLAGS) -o $(BINPATH)/dp-nlp-hub
 	HUMAN_LOG=1 DEBUG=1 $(BINPATH)/dp-nlp-hub
 
+.PHONY: fmt ## Formats the code using go fmt and go vet
+fmt: 
+	go fmt ./...
+	go vet ./...
+
+.PHONY: lint ## Automated checking of your source code for programmatic and stylistic errors
+lint: 
+	golangci-lint run ./...
+
+.PHONY: run 
+run: ## Runs container name: from image name: nlp_hub
+	docker run -p 5000:5000 --name hub -ti --rm nlp_hub
+
+.PHONY: run_locally 
+run_locally: ## Runs container name: from image name: nlp_hub
+	go run .
+
 .PHONY: test
 test: ## Runs all tests
 	go test -race -cover ./...
 
-.PHONY: convey
-convey: ## Runs only convey tests
-	goconvey ./...
 
 .PHONY: test-component
 test-component: ## Test components

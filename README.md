@@ -10,40 +10,46 @@ In particular, this will call out to the dedicated thin wrappers for ML models w
 
 - `make help` - Displays a help menu with available `make` scripts
 - `make all` - Runs audit test and build commands
-- `make run_docker_container` - Runs container name: from image name: nlp_hub
-- `make build_docker` - Builds ./Dockerfile image name: nlp_hub
-- `make build` - Build bin file in folder build
-- `make test` - Runs all tests with -cover -race flags
+- `make audit` - Audits and finds vulnerable dependencies
+- `make build` - Builds ./Dockerfile image name: nlp_hub
+- `make build_locally` - Build bin file in folder build
+- `make clean` - Removes /bin folder
 - `make convey` - Runs only convey tests
 - `make debug` - Runs application locally with debug mode on
+- `make fmt` - Formats the code using go fmt and go vet
+- `make lint` - Automated checking of your source code for programmatic and stylistic errors
+- `make run` - Runs container name: hub from image name: nlp_hub
+- `make run_locally` - Runs the app locally
+- `make test` - Runs all tests with -cover -race flags
+- `make test_component` - Test components
 - `make update` - Go gets all of the dependencies and downloads them
 
 ### Configuration
 
 | Environment variable         | Default   | Description
 | ---------------------------- | --------- | -----------
-| BIND_ADDR                    | :3002     | The host and port to bind to
+| BIND_ADDR                    | :5000     | The host and port to bind to
 | GRACEFUL_SHUTDOWN_TIMEOUT    | 5s        | The graceful shutdown timeout in seconds (`time.Duration` format)
 | HEALTHCHECK_INTERVAL         | 30s       | Time between self-healthchecks (`time.Duration` format)
 | HEALTHCHECK_CRITICAL_TIMEOUT | 90s       | Time to wait until an unhealthy dependent propagates its state to make this app unhealthy (`time.Duration` format)
 |	BERLIN_BASE           | http://localhost:3001/berlin/search |The url where the berlin api is available
 |	SCRUBBER_BASE               | http://localhost:3002/scrubber/search | The url where the scrubber api  is available
-|	CATEGORY_BASE           | http://localhost:80/categories |The url where the scrubber api is available
+|	CATEGORY_BASE           | http://localhost:80/categories |The url where the category api is available
 
 ## Quick setup
 
 ### Docker
 
 ```shell
-make build_docker
-make run_docker_container
+make build
+make run
 ```
 
 ### Locally
 
 ```shell
 make update
-make debug
+make debug/run_locally
 ```
 
 ## Dependencies

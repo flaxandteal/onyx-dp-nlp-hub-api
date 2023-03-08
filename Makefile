@@ -27,6 +27,11 @@ build:Dockerfile ## Builds ./Dockerfile image name: nlp_hub
 build_locally: ## builds bin
 	go build -tags 'production' $(LDFLAGS) -o $(BINPATH)/dp-nlp-hub
 
+.PHONY: clean
+clean: ## Removes /bin folder
+	rm -fr ./build
+	rm -fr ./vendor
+
 .PHONY: convey
 convey: ## Runs only convey tests
 	goconvey ./...
@@ -46,11 +51,11 @@ lint:
 	golangci-lint run ./...
 
 .PHONY: run 
-run: ## Runs container name: from image name: nlp_hub
+run: ## Runs container name: hub from image name: nlp_hub
 	docker run -p 5000:5000 --name hub -ti --rm nlp_hub
 
 .PHONY: run_locally 
-run_locally: ## Runs container name: from image name: nlp_hub
+run_locally: ## Run the app locally
 	go run .
 
 .PHONY: test
@@ -61,11 +66,6 @@ test: ## Runs all tests
 .PHONY: test-component
 test-component: ## Test components
 	go test -cover -coverpkg=github.com/ONSdigital/dp-nlp-hub/... -component
-
-.PHONY: clean
-clean: ## remove /bin folder
-	rm -fr ./build
-	rm -fr ./vendor
 
 .PHONY: update
 update: ## Installs all go dependencies

@@ -8,7 +8,6 @@ import (
 
 	"github.com/ONSdigital/dp-nlp-hub/config"
 	"github.com/ONSdigital/dp-nlp-hub/models"
-	"github.com/ONSdigital/dp-nlp-hub/payloads"
 )
 
 func HubHandler(cfg *config.Config) http.HandlerFunc {
@@ -18,7 +17,7 @@ func HubHandler(cfg *config.Config) http.HandlerFunc {
 
 		ctx := r.Context()
 
-		var result payloads.Hub
+		var result models.Hub
 
 		// Gets the scrubber response
 		err := MakeRequest(ctx, cfg.ScrubberBase, models.GetScrubberParams(r.URL.Query()), &result.Scrubber)

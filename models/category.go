@@ -1,4 +1,4 @@
-package params
+package models
 
 type CategoryParams struct {
 	Query string `url:"query,omitempty"`

@@ -1,4 +1,4 @@
-package params
+package models
 
 import (
 	"net/url"
@@ -7,11 +7,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetScrubberParams(t *testing.T) {
+func TestGetBerlinParams(t *testing.T) {
 	query := url.Values{}
 	query.Set("q", "Berlin")
+	query.Set("state", "DE")
 
-	berlinParams := GetScrubberParams(query)
+	berlinParams := GetBerlinParams(query)
 
 	assert.Equal(t, "Berlin", berlinParams.Query)
+	assert.Equal(t, "DE", berlinParams.State)
 }

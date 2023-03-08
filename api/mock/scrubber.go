@@ -14,7 +14,7 @@ func CreateScrubberServer() *httptest.Server {
 		w.WriteHeader(http.StatusOK)
 
 		// Return a mocked scrubber response
-		response := models.ScrubberSearchSchemaJson{
+		response := models.Scrubber{
 			Query: "mocked query",
 			Results: models.Results{
 				Areas: []models.AreaResp{

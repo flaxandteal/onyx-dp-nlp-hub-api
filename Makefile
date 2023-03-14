@@ -24,7 +24,7 @@ build: Dockerfile ## Builds ./Dockerfile image name: scrubber
 	docker build -t hub_container .
 
 .PHONY: build-bin
-build_bin: ## builds bin
+build-bin: ## builds bin
 	go build -tags 'production' $(LDFLAGS) -o $(BINPATH)/nlp_hub
 
 .PHONY: clean
@@ -56,7 +56,7 @@ lint: ## Automated checking of your source code for programmatic and stylistic e
 
 .PHONY: lint-local 
 lint-local: ## Automated checking of your source code for programmatic and stylistic errors
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	golangci-lint run ./...
 
 .PHONY: run 
@@ -72,7 +72,7 @@ test: ## Runs standard unit test tests
 	go test -race -cover ./... 
 
 .PHONY: test-all
-test: convey test-component	test ## Runs all tests with -race and -cover flags
+test-all: test-component test ## Runs all tests with -race and -cover flags
 	go test -race -cover ./...
 
 .PHONY: test-component

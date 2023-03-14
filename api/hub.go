@@ -49,13 +49,13 @@ func HubHandler(cfg *config.Config) http.HandlerFunc {
 			log.Error(ctx, "error encoding result", err)
 
 			errObj := ErrorResp{
-				errors: []Errors{
+				Errors: []Errors{
 					{
-						error_code: "", // to be added once Nathan finished the error-codes lib
-						message:    "An unexpected error occurred while processing your request",
+						Error_code: "", // to be added once Nathan finished the error-codes lib
+						Message:    "An unexpected error occurred while processing your request",
 					},
 				},
-				trace_id: getRequestId(ctx),
+				Trace_id: getRequestId(ctx),
 			}
 
 			if err := json.NewEncoder(w).Encode(errObj); err != nil {

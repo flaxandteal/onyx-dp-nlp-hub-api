@@ -44,8 +44,14 @@ type CategoryParams struct {
 	Query string `url:"query,omitempty"`
 }
 
-func GetCategoryParams(q string) *CategoryParams {
-	return &CategoryParams{
-		Query: q,
+func GetCategoryParams(query url.Values) *CategoryParams {
+	result := CategoryParams{
+		Query: "",
 	}
+
+	if len(query["query"]) >= 1 {
+		result.Query = query["query"][0]
+	}
+
+	return &result
 }

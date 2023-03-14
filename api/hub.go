@@ -3,7 +3,9 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"sync"
 
 	"github.com/ONSdigital/dp-nlp-hub/config"
 	"github.com/ONSdigital/dp-nlp-hub/models"
@@ -18,23 +20,28 @@ func HubHandler(cfg *config.Config) http.HandlerFunc {
 
 		var result models.Hub
 
-		// Gets the scrubber response
-		err := MakeRequest(r.Context(), cfg.ScrubberBase, models.GetScrubberParams(r.URL.Query()), &result.Scrubber)
-		if err != nil {
-			log.Warn(ctx, err.Error())
-		}
+		var wg sync.WaitGroup
+		wg.Add(3)
 
-		// Gets the berlin response using a filter from url params and a query from scrubber
-		err = MakeRequest(r.Context(), cfg.BerlinBase, models.GetBerlinParams(r.URL.Query()), &result.Berlin)
-		if err != nil {
-			log.Warn(ctx, err.Error())
-		}
+		go func() {
+			defer wg.Done()
+			err := MakeRequest(r.Context(), cfg.ScrubberBase, models.GetScrubberParams(r.URL.Query()), &result.Scrubber)
+			log.Warn(ctx, fmt.Sprintf("Scrubber error: %s", err.Error()))
+		}()
 
-		// Gets the category response using berlin normalized query
-		err = MakeRequest(r.Context(), cfg.CategoryBase, models.GetCategoryParams(result.Berlin.Query.Normalized), &result.Category)
-		if err != nil {
-			log.Warn(ctx, err.Error())
-		}
+		go func() {
+			defer wg.Done()
+			err := MakeRequest(r.Context(), cfg.BerlinBase, models.GetBerlinParams(r.URL.Query()), &result.Berlin)
+			log.Warn(ctx, fmt.Sprintf("Berlin error: %s", err.Error()))
+		}()
+
+		go func() {
+			defer wg.Done()
+			err := MakeRequest(r.Context(), cfg.CategoryBase, models.GetCategoryParams(r.URL.Query()), &result.Category)
+			log.Warn(ctx, fmt.Sprintf("Category error: %s", err.Error()))
+		}()
+
+		wg.Wait()
 
 		if err := json.NewEncoder(w).Encode(result); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)

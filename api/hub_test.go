@@ -9,7 +9,7 @@ import (
 
 	"github.com/ONSdigital/dp-nlp-hub/api/mock"
 	"github.com/ONSdigital/dp-nlp-hub/config"
-	"github.com/ONSdigital/dp-nlp-hub/payloads"
+	"github.com/ONSdigital/dp-nlp-hub/models"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -49,7 +49,7 @@ func TestHubHandler(t *testing.T) {
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 
 	// Decode the response JSON into a Hub object and check that it contains expected data
-	var hub payloads.Hub
+	var hub models.Hub
 	err = json.NewDecoder(resp.Body).Decode(&hub)
 	assert.NoError(t, err)
 	t.Log(hub.Scrubber)

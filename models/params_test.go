@@ -1,4 +1,4 @@
-package params
+package models
 
 import (
 	"net/url"
@@ -16,4 +16,13 @@ func TestGetBerlinParams(t *testing.T) {
 
 	assert.Equal(t, "Berlin", berlinParams.Query)
 	assert.Equal(t, "DE", berlinParams.State)
+}
+
+func TestGetScrubberParams(t *testing.T) {
+	query := url.Values{}
+	query.Set("q", "Berlin")
+
+	berlinParams := GetScrubberParams(query)
+
+	assert.Equal(t, "Berlin", berlinParams.Query)
 }

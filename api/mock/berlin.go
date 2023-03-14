@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	"github.com/ONSdigital/dp-nlp-hub/payloads"
+	"github.com/ONSdigital/dp-nlp-hub/models"
 )
 
 func CreateBerlinServer() *httptest.Server {
@@ -14,8 +14,8 @@ func CreateBerlinServer() *httptest.Server {
 		w.WriteHeader(http.StatusOK)
 
 		// Return a mocked berlin response
-		response := payloads.BerlinSearchSchemaJson{
-			Query: payloads.SearchTermJson{
+		response := models.BerlinSearchSchemaJson{
+			Query: models.SearchTermJson{
 				Codes:           []string{"test1", "test2"},
 				ExactMatches:    []string{"Berlin"},
 				Normalized:      "Berlin",
@@ -23,9 +23,9 @@ func CreateBerlinServer() *httptest.Server {
 				Raw:             "Berlin",
 				StopWords:       []string{"in", "a"},
 			},
-			Results: []payloads.SearchResult{
+			Results: []models.SearchResult{
 				{
-					Loc: payloads.LocJson{
+					Loc: models.LocJson{
 						Codes:    []string{"test1", "test2"},
 						Encoding: "UTF-8",
 						Id:       "9",
@@ -36,7 +36,7 @@ func CreateBerlinServer() *httptest.Server {
 					Score: 100,
 				},
 				{
-					Loc: payloads.LocJson{
+					Loc: models.LocJson{
 						Codes:    []string{"BRE", "DEU"},
 						Encoding: "UTF-8",
 						Id:       "10",

@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	"github.com/ONSdigital/dp-nlp-hub/payloads"
+	"github.com/ONSdigital/dp-nlp-hub/models"
 )
 
 func CreateCategoryServer() *httptest.Server {
@@ -14,7 +14,7 @@ func CreateCategoryServer() *httptest.Server {
 		w.WriteHeader(http.StatusOK)
 
 		// Return a mocked category response
-		categories := payloads.Category{
+		categories := models.Category{
 			{
 				Code:  []string{"mocked category"},
 				Score: 1.2,

@@ -46,6 +46,8 @@ func HubHandler(cfg *config.Config) http.HandlerFunc {
 		if err := json.NewEncoder(w).Encode(result); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 
+			log.Error(ctx, "error encoding result", err)
+
 			errObj := ErrorResp{
 				errors: []Errors{
 					{

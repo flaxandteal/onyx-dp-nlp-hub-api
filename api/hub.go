@@ -31,7 +31,7 @@ func HubHandler(cfg *config.Config) http.HandlerFunc {
 		}
 
 		// Gets the category response using berlin normalized query
-		err = MakeRequest(r.Context(), cfg.CategoryBase, models.GetCategoryParams(result.Berlin.Query.Normalized), &result.Category)
+		err = MakeRequest(r.Context(), cfg.CategoryBase, models.GetCategoryParams(r.URL.Query()), &result.Category)
 		if err != nil {
 			log.Warn(ctx, err.Error())
 		}

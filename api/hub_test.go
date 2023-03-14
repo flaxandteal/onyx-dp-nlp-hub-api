@@ -1,7 +1,6 @@
 package api
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -12,8 +11,6 @@ import (
 	"github.com/ONSdigital/dp-nlp-hub/models"
 	"github.com/stretchr/testify/assert"
 )
-
-var ctx = context.Background()
 
 func TestHubHandler(t *testing.T) {
 	// Create mock servers for the hub to call

@@ -11,7 +11,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-const serviceName = "dp-nlp-hub"
+const serviceName = "dp-nlp-hub-api"
 
 var (
 	BuildTime string = "1601119818"
@@ -36,8 +36,6 @@ func run(ctx context.Context) error {
 	// Run the service, providing an error channel for fatal errors
 	svcErrors := make(chan error, 1)
 	svcList := service.NewServiceList(&service.Init{})
-
-	log.Info(ctx, "dp-nlp-hub version", log.Data{"version": Version})
 
 	// Read config
 	cfg, err := config.Get()

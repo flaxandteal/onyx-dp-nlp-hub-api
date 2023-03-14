@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"testing"
 
 	"github.com/ONSdigital/dp-nlp-hub/models"
 )
 
-func CreateScrubberServer() *httptest.Server {
+func CreateScrubberServer(t *testing.T) *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -41,6 +42,8 @@ func CreateScrubberServer() *httptest.Server {
 			return
 		}
 
-		w.Write(responseBytes)
+		if _, err := w.Write(responseBytes); err != nil {
+			t.Error(err)
+		}
 	}))
 }

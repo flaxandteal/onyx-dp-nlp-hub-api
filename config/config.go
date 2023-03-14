@@ -17,14 +17,10 @@ type Config struct {
 	CategoryBase               string        `envconfig:"CATEGORY_BASE"`
 }
 
-var cfg *Config
-
 // Get returns the default config with any modifications through environment
 // variables
 func Get() (*Config, error) {
-	cfg := &Config{}
-
-	cfg = &Config{
+	cfg := &Config{
 		BindAddr:                   ":5000",
 		GracefulShutdownTimeout:    5 * time.Second,
 		HealthCheckInterval:        30 * time.Second,

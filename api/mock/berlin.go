@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"testing"
 
 	"github.com/ONSdigital/dp-nlp-hub/models"
 )
 
-func CreateBerlinServer() *httptest.Server {
+func CreateBerlinServer(t *testing.T) *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -55,6 +56,9 @@ func CreateBerlinServer() *httptest.Server {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		w.Write(jsonResponse)
+
+		if _, err := w.Write(jsonResponse); err != nil {
+			t.Error(err)
+		}
 	}))
 }

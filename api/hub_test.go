@@ -1,7 +1,6 @@
 package api
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -13,17 +12,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var ctx = context.Background()
-
 func TestHubHandler(t *testing.T) {
 	// Create mock servers for the hub to call
-	berlin := mock.CreateBerlinServer()
+	berlin := mock.CreateBerlinServer(t)
 	defer berlin.Close()
 
-	scrubber := mock.CreateScrubberServer()
+	scrubber := mock.CreateScrubberServer(t)
 	defer scrubber.Close()
 
-	category := mock.CreateCategoryServer()
+	category := mock.CreateCategoryServer(t)
 	defer category.Close()
 
 	cfg := config.Config{

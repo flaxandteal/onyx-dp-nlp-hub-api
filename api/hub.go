@@ -20,54 +20,28 @@ func HubHandler(cfg *config.Config) http.HandlerFunc {
 
 		var result models.Hub
 
-		scrubberCh := make(chan error)
-		berlinCh := make(chan error)
-		categoryCh := make(chan error)
-
 		var wg sync.WaitGroup
 		wg.Add(3)
 
 		go func() {
 			defer wg.Done()
 			err := MakeRequest(r.Context(), cfg.ScrubberBase, models.GetScrubberParams(r.URL.Query()), &result.Scrubber)
-			scrubberCh <- err
+			log.Warn(ctx, fmt.Sprintf("Scrubber error: %s", err.Error()))
 		}()
 
 		go func() {
 			defer wg.Done()
 			err := MakeRequest(r.Context(), cfg.BerlinBase, models.GetBerlinParams(r.URL.Query()), &result.Berlin)
-			berlinCh <- err
+			log.Warn(ctx, fmt.Sprintf("Berlin error: %s", err.Error()))
 		}()
 
 		go func() {
 			defer wg.Done()
 			err := MakeRequest(r.Context(), cfg.CategoryBase, models.GetCategoryParams(r.URL.Query()), &result.Category)
-			categoryCh <- err
+			log.Warn(ctx, fmt.Sprintf("Category error: %s", err.Error()))
 		}()
 
 		wg.Wait()
-		close(scrubberCh)
-		close(berlinCh)
-		close(categoryCh)
-
-		// Check for errors in each channel
-		for err := range scrubberCh {
-			if err != nil {
-				log.Warn(ctx, fmt.Sprintf("Scrubber error: %s", err.Error()))
-			}
-		}
-
-		for err := range berlinCh {
-			if err != nil {
-				log.Warn(ctx, fmt.Sprintf("Berlin error: %s", err.Error()))
-			}
-		}
-
-		for err := range categoryCh {
-			if err != nil {
-				log.Warn(ctx, fmt.Sprintf("Category error: %s", err.Error()))
-			}
-		}
 
 		if err := json.NewEncoder(w).Encode(result); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)

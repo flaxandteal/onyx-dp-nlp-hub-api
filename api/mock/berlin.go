@@ -14,7 +14,7 @@ func CreateBerlinServer() *httptest.Server {
 		w.WriteHeader(http.StatusOK)
 
 		// Return a mocked berlin response
-		response := models.BerlinSearchSchemaJson{
+		response := models.Berlin{
 			Query: models.SearchTermJson{
 				Codes:           []string{"test1", "test2"},
 				ExactMatches:    []string{"Berlin"},

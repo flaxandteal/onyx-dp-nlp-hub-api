@@ -23,7 +23,7 @@ func Setup(ctx context.Context, r *mux.Router, cfg *config.Config) *API {
 		Router: r,
 	}
 
-	r.HandleFunc("/search", HubHandler(cfg)).Methods("GET").Name("HubHandler")
+	r.HandleFunc("/nlp-hub/search", HubHandler(cfg)).Methods("GET").Name("HubHandler")
 	return api
 }
 

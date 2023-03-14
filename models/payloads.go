@@ -7,7 +7,7 @@ type Hub struct {
 }
 
 type Scrubber struct {
-	Query   string  `json:"query,omitempty"`
+	Query   string  `json:"query"`
 	Results Results `json:"results,omitempty"`
 	Time    string  `json:"time,omitempty"`
 }
@@ -30,8 +30,8 @@ type IndustryResp struct {
 }
 
 type Category []struct {
-	Code  []string `json:"c"`
-	Score float32  `json:"s"`
+	Code  []string `json:"c,omitempty"`
+	Score float32  `json:"s,omitempty"`
 }
 
 type Berlin struct {

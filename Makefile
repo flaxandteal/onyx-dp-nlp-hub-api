@@ -12,57 +12,78 @@ VERSION ?= $(shell git tag --points-at HEAD | grep ^v | head -n 1)
 
 LDFLAGS = -ldflags "-X main.BuildTime=$(BUILD_TIME) -X main.GitCommit=$(GIT_COMMIT) -X main.Version=$(VERSION)"
 
-.PHONY: all ## runs audit test and build commands
-all: audit test build
+.PHONY: all
+all: delimiter-AUDIT audit delimiter-LINTERS lint delimiter-UNIT-TESTS test delimiter-COMPONENT_TESTS test-component delimiter-FINISH ## Runs multiple targets, audit, lint, test and test-component
 
 .PHONY: audit
-audit:
+audit: ## Audits and finds vulnerable dependencies
 	go list -json -m all | nancy sleuth
 
-.PHONY: lint
-lint:
-	exit
+.PHONY: build 
+build: Dockerfile ## Builds ./Dockerfile image name: scrubber
+	docker build -t hub_container .
 
-.PHONY: run_docker_container 
-run_docker_container: ## Runs container name: from image name: nlp_hub
-	docker run -p 5000:5000 --name hub -ti --rm nlp_hub
+.PHONY: build-bin
+build-bin: ## builds bin
+	go build -tags 'production' $(LDFLAGS) -o $(BINPATH)/nlp_hub
 
-.PHONY: build_docker 
-build_docker: Dockerfile ## Builds ./Dockerfile image name: nlp_hub
-	docker build -t nlp_hub .
+.PHONY: clean
+clean: ## Removes /bin folder
+	rm -fr ./build
+	rm -fr ./vendor
 
-.PHONY: build
-build: ## builds bin
-	go build -tags 'production' $(LDFLAGS) -o $(BINPATH)/dp-nlp-hub
-
+.PHONY: convey
+convey: ## Runs Convey tests
+	goconvey ./...
+	
 .PHONY: debug
 debug: ## Runs application locally with debug mode on
 	go build -tags 'debug' $(LDFLAGS) -o $(BINPATH)/dp-nlp-hub
 	HUMAN_LOG=1 DEBUG=1 $(BINPATH)/dp-nlp-hub
 
-.PHONY: test
-test: ## Runs all tests
-	go test -race -cover ./...
+.PHONY: delimiter-%
+delimiter-%:
+	@echo '===================${GREEN} $* ${RESET}==================='
 
-.PHONY: convey
-convey: ## Runs only convey tests
-	goconvey ./...
+.PHONY: fmt 
+fmt: ## Formats the code using go fmt and go vet
+	go fmt ./...
+	go vet ./...
+
+.PHONY: lint 
+lint: ## Automated checking of your source code for programmatic and stylistic errors
+	golangci-lint run ./...
+
+.PHONY: lint-local 
+lint-local: ## Automated checking of your source code for programmatic and stylistic errors
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	golangci-lint run ./...
+
+.PHONY: run 
+run: ## Runs container name: hub from image name: nlp_hub
+	docker run -p 5000:5000 --name hub_container -ti --rm nlp_hub
+
+.PHONY: run-locally 
+run-locally: ## Run the app locally
+	go run .
+ 
+.PHONY: test
+test: ## Runs standard unit test tests
+	go test -race -cover ./... 
+
+.PHONY: test-all
+test-all: test-component test ## Runs all tests with -race and -cover flags
+	go test -race -cover ./...
 
 .PHONY: test-component
 test-component: ## Test components
 	go test -cover -coverpkg=github.com/ONSdigital/dp-nlp-hub/... -component
 
-.PHONY: clean
-clean: ## remove /bin folder
-	rm -fr ./build
-	rm -fr ./vendor
-
 .PHONY: update
-update: ## Installs all go dependencies
-	@echo Installing all dependencies
+update: ## Go gets all of the dependencies and downloads them
+	go get .
 	go mod download
 
-.PHONY: help
 help: ## Show this help.
 	@echo ''
 	@echo 'Usage:'

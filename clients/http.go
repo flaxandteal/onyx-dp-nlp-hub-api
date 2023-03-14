@@ -2,7 +2,7 @@ package clients
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/dghubble/sling"
@@ -33,7 +33,7 @@ func (cl *HttpClient) DoRequest() (*http.Response, error) {
 
 	// use http.statusok and between 200 and 300
 	if res.StatusCode != 200 {
-		body, _ := ioutil.ReadAll(res.Body)
+		body, _ := io.ReadAll(res.Body)
 		return nil, fmt.Errorf("invalid request: status code: %d \n Response body: %s\n Client sling: %s", res.StatusCode, body, cl.Sl)
 	}
 

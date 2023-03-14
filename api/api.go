@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 
 	"github.com/ONSdigital/dp-nlp-hub/clients"
 	"github.com/ONSdigital/dp-nlp-hub/config"
@@ -40,7 +40,7 @@ func MakeRequest(ctx context.Context, url string, params interface{}, resp inter
 
 	log.Info(ctx, "request successful")
 
-	b, err := ioutil.ReadAll(res.Body)
+	b, err := io.ReadAll(res.Body)
 	if err != nil {
 		return fmt.Errorf("parsing response body for %s has failed with err: %s", url, err.Error())
 	}

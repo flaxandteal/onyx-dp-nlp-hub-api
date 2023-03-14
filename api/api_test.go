@@ -33,7 +33,9 @@ func TestMakeRequest(t *testing.T) {
 	// Create a test server to simulate the API
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"message": "OK"}`))
+		if _, err := w.Write([]byte(`{"message": "OK"}`)); err != nil {
+			t.Error(err)
+		}
 	}))
 	defer server.Close()
 
@@ -49,7 +51,9 @@ func TestMakeRequest(t *testing.T) {
 	}{}
 
 	// Make a request using the MakeRequest function
-	MakeRequest(context.Background(), server.URL, params, &resp)
+	if err := MakeRequest(context.Background(), server.URL, params, &resp); err != nil {
+		t.Error(err)
+	}
 
 	// Check the response is as expected
 	assert.Equal(t, "OK", resp.Message)

@@ -58,7 +58,9 @@ func HubHandler(cfg *config.Config) http.HandlerFunc {
 				trace_id: getRequestId(ctx),
 			}
 
-			json.NewEncoder(w).Encode(errObj)
+			if err := json.NewEncoder(w).Encode(errObj); err != nil {
+				log.Error(ctx, "error encoding errObj", err)
+			}
 		}
 	}
 }

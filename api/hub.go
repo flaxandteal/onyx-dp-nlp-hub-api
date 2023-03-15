@@ -18,30 +18,38 @@ func HubHandler(cfg *config.Config) http.HandlerFunc {
 
 		ctx := r.Context()
 
-		var result models.Hub
+		var scrubber *models.Scrubber
+		var berlin *models.Berlin
+		var category *models.Category
 
 		var wg sync.WaitGroup
 		wg.Add(3)
 
 		go func() {
 			defer wg.Done()
-			err := MakeRequest(r.Context(), cfg.ScrubberBase, models.GetScrubberParams(r.URL.Query()), &result.Scrubber)
+			err := MakeRequest(r.Context(), cfg.ScrubberBase, models.GetScrubberParams(r.URL.Query()), scrubber)
 			log.Warn(ctx, fmt.Sprintf("Scrubber error: %s", err.Error()))
 		}()
 
 		go func() {
 			defer wg.Done()
-			err := MakeRequest(r.Context(), cfg.BerlinBase, models.GetBerlinParams(r.URL.Query()), &result.Berlin)
+			err := MakeRequest(r.Context(), cfg.BerlinBase, models.GetBerlinParams(r.URL.Query()), berlin)
 			log.Warn(ctx, fmt.Sprintf("Berlin error: %s", err.Error()))
 		}()
 
 		go func() {
 			defer wg.Done()
-			err := MakeRequest(r.Context(), cfg.CategoryBase, models.GetCategoryParams(r.URL.Query()), &result.Category)
+			err := MakeRequest(r.Context(), cfg.CategoryBase, models.GetCategoryParams(r.URL.Query()), category)
 			log.Warn(ctx, fmt.Sprintf("Category error: %s", err.Error()))
 		}()
 
 		wg.Wait()
+
+		result := models.Hub{
+			Scrubber: *scrubber,
+			Berlin:   *berlin,
+			Category: *category,
+		}
 
 		if err := json.NewEncoder(w).Encode(result); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
